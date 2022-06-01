@@ -52,9 +52,6 @@ public:
 	void render();
 	void update();
 	void handleEvents();
-
-	
-	
 };
 	
 	

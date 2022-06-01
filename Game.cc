@@ -24,9 +24,6 @@ std::cout << "antes del login" << std::endl;
 	flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
 	
 	player->login();
-
-
-
 }
 
 void Game::render() {
@@ -45,14 +42,32 @@ void Game::render() {
 }
 
 void Game::handleEvents() {
-	SDL_Event evt;
+	SDL_Event event;
+
+	while( SDL_PollEvent( &event ) ){
+		switch (event.type) {
+			case SDL_WINDOWEVENT:
+				switch (event.window.event) {
+					case SDL_WINDOWEVENT_CLOSE:   // Cerrar ventana
+						exit = true;
+						break;
+
+					default:
+						break;
+				}
+				break;
+
+			default:
+				break;
+		}
+	}
 }
 
 
 void Game::run() {
 	uint32_t startTime, frameTime;
 	startTime = SDL_GetTicks();
-	while (true) {
+	while (!exit) {
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime >= FRAME_RATE) {
 			handleEvents();
@@ -70,7 +85,6 @@ void Game::update() {
 }
 
 Game::~Game() {
-
 	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(window_);
 	SDL_Quit();

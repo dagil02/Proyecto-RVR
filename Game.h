@@ -11,7 +11,7 @@
 
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
-const int NUM_SPRITES = 1;
+const int NUM_SPRITES = 2;
 const string dir = "Sprites/";
 const uint32_t FRAME_RATE = 30;
 
@@ -31,11 +31,19 @@ private:
 		int col;
 	};
 	
-	TexturesAtributes atributes_[NUM_SPRITES] = { "tablero.png", 1, 1};
+	TexturesAtributes atributes_[NUM_SPRITES] = { "tablero.png", 1, 1, "flecha.png",1,1};
 
 	ClientPlayer* player;
 
 	GameObject tablero;
+	
+	Button* flecha1;
+	Button* flecha2;
+	Button* flecha3;
+	Button* flecha4;
+	Button* flecha5;
+	Button* flecha6;
+	Button* flecha7;
 
 public:
 	Game(ClientPlayer* cp);

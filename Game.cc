@@ -10,10 +10,19 @@ Game::Game(ClientPlayer* cp) {
 		texturas_[i] = new Texture(renderer_, (dir + atributes_[i].nombre), atributes_[i].row, atributes_[i].col);
 	}
 	std::cout << "despues de texturas" << std::endl;
-	tablero.setValue(150, 100, 500, 500, texturas_[0]);
+	tablero.setValue(140, 80, 520, 520, texturas_[0]);
 	
 std::cout << "antes del login" << std::endl;
 	player = cp;
+	
+	flecha1 = new Button(155, 10, 68, 68, texturas_[1], player, NULL);
+	flecha2 = new Button(225, 10, 68, 68, texturas_[1], player, NULL);
+	flecha3 = new Button(295, 10, 68, 68, texturas_[1], player, NULL);
+	flecha4 = new Button(365, 10, 68, 68, texturas_[1], player, NULL);
+	flecha5 = new Button(435, 10, 68, 68, texturas_[1], player, NULL);
+	flecha6 = new Button(505, 10, 68, 68, texturas_[1], player, NULL);
+	flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
+	
 	player->login();
 
 
@@ -22,7 +31,16 @@ std::cout << "antes del login" << std::endl;
 
 void Game::render() {
 	SDL_RenderClear(renderer_);
+	
 	tablero.render();
+	flecha1->render();
+	flecha2->render();
+	flecha3->render();
+	flecha4->render();
+	flecha5->render();
+	flecha6->render();
+	flecha7->render();
+	
 	SDL_RenderPresent(renderer_);
 }
 

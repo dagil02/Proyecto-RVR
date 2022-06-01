@@ -5,14 +5,14 @@ Game::Game(ClientPlayer* cp) {
 	window_ = SDL_CreateWindow("4 en raya", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 	if (window_ == nullptr || renderer_ == nullptr) throw "Error loading the SDL window or renderer";
-	std::cout << "antes de texturas" << std::endl;
-	for (int i = 0; i < NUM_SPRITES; i++) {
-		texturas_[i] = new Texture(renderer_, (dir + atributes_[i].nombre), atributes_[i].row, atributes_[i].col);
+		//std::cout << "antes de texturas" << std::endl;
+		for (int i = 0; i < NUM_SPRITES; i++) {
+			texturas_[i] = new Texture(renderer_, (dir + atributes_[i].nombre), atributes_[i].row, atributes_[i].col);
 	}
-	std::cout << "despues de texturas" << std::endl;
-	tablero.setValue(140, 80, 520, 520, texturas_[0]);
+	//std::cout << "despues de texturas" << std::endl;
+	tablero.setValue(139, 79, 520, 520, texturas_[0]);
 	
-std::cout << "antes del login" << std::endl;
+	//std::cout << "antes del login" << std::endl;
 	player = cp;
 	
 	flecha1 = new Button(155, 10, 68, 68, texturas_[1], player, NULL);
@@ -22,6 +22,9 @@ std::cout << "antes del login" << std::endl;
 	flecha5 = new Button(435, 10, 68, 68, texturas_[1], player, NULL);
 	flecha6 = new Button(505, 10, 68, 68, texturas_[1], player, NULL);
 	flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
+
+	ficha_roja = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
+	ficha_amarilla = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
 	
 	player->login();
 }
@@ -29,7 +32,6 @@ std::cout << "antes del login" << std::endl;
 void Game::render() {
 	SDL_RenderClear(renderer_);
 	
-	tablero.render();
 	flecha1->render();
 	flecha2->render();
 	flecha3->render();
@@ -37,7 +39,24 @@ void Game::render() {
 	flecha5->render();
 	flecha6->render();
 	flecha7->render();
+
+	// Renderizamos fichas ---------------------------
+	SDL_Rect posIzquierdaAbajo = {160, 500, 65, 65};
+
+	for (int x = 0; x <= 6; x++)
+	{
+		for (int y = 0; y <= 5; y++)
+		{
+			SDL_Rect r = posIzquierdaAbajo;
+			r.x += x * 69;
+			r.y -= y * 78;
+			ficha_roja->render(r);
+		}
+	}
 	
+	// Renderizamos tablero --------------------------
+	tablero.render();
+
 	SDL_RenderPresent(renderer_);
 }
 

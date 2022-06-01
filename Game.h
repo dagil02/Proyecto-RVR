@@ -19,7 +19,6 @@ const uint32_t FRAME_RATE = 30;
 class Game
 {
 private:
-
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
 	bool exit = false;
@@ -31,7 +30,10 @@ private:
 		int col;
 	};
 	
-	TexturesAtributes atributes_[NUM_SPRITES] = { "tablero.png", 1, 1, "flecha.png",1,1};
+	TexturesAtributes atributes_[NUM_SPRITES] = { 
+		"tablero.png", 1, 1, 
+		"flecha.png", 1, 1
+		};
 
 	ClientPlayer* player;
 
@@ -44,6 +46,9 @@ private:
 	Button* flecha5;
 	Button* flecha6;
 	Button* flecha7;
+
+	Texture* ficha_roja;
+	Texture* ficha_amarilla;
 
 public:
 	Game(ClientPlayer* cp);

@@ -73,12 +73,7 @@ public:
 
 
     };
-    //Devuelve la situación de ambos jugadores
-    void showStats(Player *player)
-    {
-        cout << player->getName() << " Vidas: " << player->getHealth() << " Balas: " << player->getAmmo() << " Cervezas: " << player->getBeer() << endl;
-    }
-
+    
     void sendResults();
     //Para seleccionar la acción
     void selectionPhase();

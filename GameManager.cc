@@ -12,6 +12,7 @@ void GameManager::selectionPhase()
 }
 
 int GameManager::mainGameLoop(){
+	return 0;
 }
 
 void GameManager::battlePhase()
@@ -25,8 +26,6 @@ void GameManager::joinPlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Sock
     playerInfo1 = playerone;
     playerInfo2 = playertwo;
 
-    playerInfo1->_turnoJugador = 1;
-    playerInfo2->_turnoJugador = 1;
 
     sock1 = sockone;
     sock2 = socktwo;

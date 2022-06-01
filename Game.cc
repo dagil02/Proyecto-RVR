@@ -5,6 +5,13 @@ Game::Game(ClientPlayer* cp) {
 	window_ = SDL_CreateWindow("4 en raya", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 	if (window_ == nullptr || renderer_ == nullptr) throw "Error loading the SDL window or renderer";
+	std::cout << "antes de texturas" << std::endl;
+	for (int i = 0; i < NUM_SPRITES; i++) {
+		texturas_[i] = new Texture(renderer_, (dir + atributes_[i].nombre), atributes_[i].row, atributes_[i].col);
+	}
+	std::cout << "despues de texturas" << std::endl;
+	tablero.setValue(150, 100, 500, 500, texturas_[0]);
+	
 std::cout << "antes del login" << std::endl;
 	player = cp;
 	player->login();
@@ -15,6 +22,7 @@ std::cout << "antes del login" << std::endl;
 
 void Game::render() {
 	SDL_RenderClear(renderer_);
+	tablero.render();
 	SDL_RenderPresent(renderer_);
 }
 

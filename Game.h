@@ -11,6 +11,8 @@
 
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
+const int NUM_SPRITES = 1;
+const string dir = "Sprites/";
 const uint32_t FRAME_RATE = 30;
 
 
@@ -21,17 +23,19 @@ private:
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
 	bool exit = false;
-	Texture* texturas_[1];
+	Texture* texturas_[NUM_SPRITES];
 
 	struct TexturesAtributes {
 		string nombre;
 		int row;
 		int col;
 	};
+	
+	TexturesAtributes atributes_[NUM_SPRITES] = { "tablero.png", 1, 1};
 
 	ClientPlayer* player;
 
-
+	GameObject tablero;
 
 public:
 	Game(ClientPlayer* cp);

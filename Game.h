@@ -15,6 +15,8 @@ const int NUM_SPRITES = 2;
 const string dir = "Sprites/";
 const uint32_t FRAME_RATE = 30;
 
+const int TABLERO_NUM_COLUMNAS = 7;
+const int TABLERO_NUM_FILAS = 6;
 
 class Game
 {
@@ -47,8 +49,11 @@ private:
 	Button* flecha6;
 	Button* flecha7;
 
-	Texture* ficha_roja;
-	Texture* ficha_amarilla;
+	int flechaIndex = 0;
+
+	Texture* flecha_Texture;
+	Texture* fichaRoja_Texture;
+	Texture* fichaAmarilla_Texture;
 
 public:
 	Game(ClientPlayer* cp);

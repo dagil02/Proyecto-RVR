@@ -15,30 +15,37 @@ Game::Game(ClientPlayer* cp) {
 	//std::cout << "antes del login" << std::endl;
 	player = cp;
 	
-	flecha1 = new Button(155, 10, 68, 68, texturas_[1], player, NULL);
-	flecha2 = new Button(225, 10, 68, 68, texturas_[1], player, NULL);
-	flecha3 = new Button(295, 10, 68, 68, texturas_[1], player, NULL);
-	flecha4 = new Button(365, 10, 68, 68, texturas_[1], player, NULL);
-	flecha5 = new Button(435, 10, 68, 68, texturas_[1], player, NULL);
-	flecha6 = new Button(505, 10, 68, 68, texturas_[1], player, NULL);
-	flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha1 = new Button(155, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha2 = new Button(225, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha3 = new Button(295, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha4 = new Button(365, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha5 = new Button(435, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha6 = new Button(505, 10, 68, 68, texturas_[1], player, NULL);
+	// flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
 
-	ficha_roja = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
-	ficha_amarilla = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
+	flecha_Texture = new Texture(renderer_, (dir + "flecha.png"), 1, 1);
+
+	fichaRoja_Texture = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
+	fichaAmarilla_Texture = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
 	
 	player->login();
 }
 
 void Game::render() {
+	// Limpiamos el canvas
 	SDL_RenderClear(renderer_);
 	
-	flecha1->render();
-	flecha2->render();
-	flecha3->render();
-	flecha4->render();
-	flecha5->render();
-	flecha6->render();
-	flecha7->render();
+	// flecha1->render();
+	// flecha2->render();
+	// flecha3->render();
+	// flecha4->render();
+	// flecha5->render();
+	// flecha6->render();
+	// flecha7->render();
+
+	SDL_Rect flechaRect = {155, 10, 65, 65};
+	flechaRect.x += flechaIndex * 69;
+	flecha_Texture->render(flechaRect);
 
 	// Renderizamos fichas ---------------------------
 	SDL_Rect posIzquierdaAbajo = {160, 500, 65, 65};
@@ -50,7 +57,7 @@ void Game::render() {
 			SDL_Rect r = posIzquierdaAbajo;
 			r.x += x * 69;
 			r.y -= y * 78;
-			ficha_roja->render(r);
+			fichaRoja_Texture->render(r);
 		}
 	}
 	
@@ -64,21 +71,31 @@ void Game::handleEvents() {
 	SDL_Event event;
 
 	while( SDL_PollEvent( &event ) ){
-		switch (event.type) {
-			case SDL_WINDOWEVENT:
-				switch (event.window.event) {
-					case SDL_WINDOWEVENT_CLOSE:   // Cerrar ventana
-						exit = true;
-						break;
 
-					default:
-						break;
-				}
-				break;
+		if (event.type == SDL_WINDOWEVENT){
+			switch (event.window.event) {
+				case SDL_WINDOWEVENT_CLOSE:   // Cerrar ventana
+					exit = true;
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
+
+		if (event.type == SDL_KEYDOWN)
+        {
+            switch( event.key.keysym.sym )
+            {
+                case SDLK_LEFT: 
+                    flechaIndex--;
+                    break;
+                case SDLK_RIGHT: 
+                    flechaIndex++;
+                default:
+                    break; 
+            }
+        }
 	}
 }
 
@@ -101,6 +118,10 @@ void Game::run() {
 }
 
 void Game::update() {
+	if (flechaIndex < 0) 
+		flechaIndex += TABLERO_NUM_COLUMNAS;
+
+	flechaIndex = flechaIndex % TABLERO_NUM_COLUMNAS;
 }
 
 Game::~Game() {

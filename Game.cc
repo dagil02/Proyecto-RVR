@@ -82,11 +82,147 @@ void Game::render() {
 	SDL_RenderPresent(renderer_);
 }
 
+bool Game::checkWin(int jugador, int x, int y){
+
+	int aux = 0;
+	int i = 0;
+	//Comprobamos horizontal
+	while (i < TABLERO_NUM_COLUMNAS){
+		if (partida[i][y] == jugador)
+			aux++;
+		else aux = 0;
+		
+		if (aux == 4)
+			return true; 
+		i++;
+	}
+	
+	//Comprobamos vertical
+	aux = 0;
+	i = y;
+	
+	while (i >= 0){
+		if (partida[x][i] == jugador)
+			aux++;
+		else aux = 0;
+		
+		if (aux == 4)
+			return true; 
+		i--;
+	}
+	
+	//Diagonal \
+    	//Obtener Coordenadas donde inicia la diagonal en base a fila - columna
+    	int nuevaFila = x;
+    	int nuevaColumna = y;
+    	bool encontrado = false;
+    	int total = 0;
+ 
+ 
+    	while((nuevaFila != 0 || nuevaColumna != 0))
+    	{
+        	nuevaFila--;
+        	nuevaColumna--;
+ 
+        	if(nuevaFila == 0 || nuevaColumna == 0)
+        		break;
+    	}
+ 
+    	do
+    	{
+        	if(nuevaFila >= TABLERO_NUM_COLUMNAS)
+        		break;
+ 
+        	if(encontrado)
+        	{
+            		if(partida[nuevaFila][nuevaColumna] == jugador)
+            		{
+                		total++;
+            		}
+            	else
+            	{
+                	encontrado = false;
+                	total = 0;
+            	}
+        }
+        if(partida[nuevaFila][nuevaColumna] == jugador && !encontrado)
+        {
+            encontrado = true;
+            total++;
+        }
+ 
+        if(total == 4)
+        {
+            return true;
+        }
+ 
+        nuevaFila++;
+        nuevaColumna++;
+ 
+    }while(nuevaFila < TABLERO_NUM_COLUMNAS);
+ 
+ 
+ 
+    //Diagonal /
+    nuevaFila = x;
+    nuevaColumna = y;
+    encontrado = false;
+    total = 0;
+ 
+    while((nuevaFila != 0 || nuevaColumna != TABLERO_NUM_FILAS))
+    {
+        nuevaFila--;
+        nuevaColumna++;
+ 
+        if(nuevaFila == 0 || nuevaColumna == TABLERO_NUM_FILAS)
+        break;
+    }
+ 
+    do
+    {
+        if(nuevaFila >= TABLERO_NUM_COLUMNAS)
+        break;
+
+        if(encontrado)
+        {
+            if(partida[nuevaFila][nuevaColumna] == jugador)
+            {
+                total++;
+            }
+            else
+            {
+                encontrado = false;
+                total = 0;
+            }
+        }
+        if(partida[nuevaFila][nuevaColumna] == jugador && !encontrado)
+        {
+            encontrado = true;
+            total++;
+        }
+ 
+        if(total == 4)
+        {
+            return true;
+        }
+ 
+        nuevaFila++;
+        nuevaColumna--;
+ 
+    }while(nuevaFila < TABLERO_NUM_COLUMNAS);
+
+	return false;
+}
+
 void Game::colocaFicha(int jugador, int columna){
 	
 	if (fichasxcolumna[columna] < TABLERO_NUM_FILAS){
 		partida [columna][fichasxcolumna[columna]] = jugador;
 		fichasxcolumna[columna]++;
+		
+		//Probando que comprueba bien la victoria
+		bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
+		if (victoria) std::cout << "victoria" << std::endl;
 	}
 }
 

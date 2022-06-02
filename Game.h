@@ -18,6 +18,8 @@ const uint32_t FRAME_RATE = 30;
 const int TABLERO_NUM_COLUMNAS = 7;
 const int TABLERO_NUM_FILAS = 6;
 
+
+
 class Game
 {
 private:
@@ -25,6 +27,9 @@ private:
 	SDL_Renderer* renderer_ = nullptr;
 	bool exit = false;
 	Texture* texturas_[NUM_SPRITES];
+	
+	int partida[TABLERO_NUM_COLUMNAS][TABLERO_NUM_FILAS];
+	int fichasxcolumna[TABLERO_NUM_COLUMNAS];
 
 	struct TexturesAtributes {
 		string nombre;
@@ -62,6 +67,7 @@ public:
 	void render();
 	void update();
 	void handleEvents();
+	void colocaFicha(int jugador, int columna);
 };
 	
 	

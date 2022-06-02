@@ -28,6 +28,14 @@ Game::Game(ClientPlayer* cp) {
 	fichaRoja_Texture = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
 	fichaAmarilla_Texture = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
 	
+	//inicialización del tablero
+	for (int i = 0; i < TABLERO_NUM_COLUMNAS; i++){
+		for (int j = 0; j < TABLERO_NUM_FILAS; j++){
+			partida [i][j] = 0;
+			fichasxcolumna [i] = 0;
+		}
+	}
+	
 	player->login();
 }
 
@@ -50,14 +58,21 @@ void Game::render() {
 	// Renderizamos fichas ---------------------------
 	SDL_Rect posIzquierdaAbajo = {160, 500, 65, 65};
 
-	for (int x = 0; x <= 6; x++)
+	for (int x = 0; x < TABLERO_NUM_COLUMNAS; x++)
 	{
-		for (int y = 0; y <= 5; y++)
+		for (int y = 0; y < TABLERO_NUM_FILAS; y++)
 		{
-			SDL_Rect r = posIzquierdaAbajo;
-			r.x += x * 69;
-			r.y -= y * 78;
-			fichaRoja_Texture->render(r);
+			if (partida[x][y] == 1){
+				SDL_Rect r = posIzquierdaAbajo;
+				r.x += x * 69;
+				r.y -= y * 78;
+				fichaRoja_Texture->render(r);
+			} else if (partida[x][y] == 2){
+				SDL_Rect r = posIzquierdaAbajo;
+				r.x += x * 69;
+				r.y -= y * 78;
+				fichaAmarilla_Texture->render(r);
+			}
 		}
 	}
 	
@@ -65,6 +80,14 @@ void Game::render() {
 	tablero.render();
 
 	SDL_RenderPresent(renderer_);
+}
+
+void Game::colocaFicha(int jugador, int columna){
+	
+	if (fichasxcolumna[columna] < TABLERO_NUM_FILAS){
+		partida [columna][fichasxcolumna[columna]] = jugador;
+		fichasxcolumna[columna]++;
+	}
 }
 
 void Game::handleEvents() {
@@ -92,6 +115,13 @@ void Game::handleEvents() {
                     break;
                 case SDLK_RIGHT: 
                     flechaIndex++;
+                    break;
+                case SDLK_RETURN: 
+                    colocaFicha(1,flechaIndex);
+                    break;
+                case SDLK_a: 
+                    colocaFicha(2,flechaIndex);
+                    break;
                 default:
                     break; 
             }

@@ -14,6 +14,8 @@ Game::Game(ClientPlayer* cp) {
 	fichaRoja_Texture = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
 	fichaAmarilla_Texture = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
 	tablero_Texture = new Texture(renderer_, (dir + "tablero.png"), 1, 1);
+	victoria_Texture = new Texture(renderer_, (dir + "victoria.png"), 1, 1);
+	derrota_Texture = new Texture(renderer_, (dir + "derrota.png"), 1, 1);
 	
 	tablero.setValue(139, 79, 520, 520, tablero_Texture);
 	
@@ -37,6 +39,15 @@ void Game::render() {
 
 	if (player->pi->_miTurno && !finDePartida)
 		flecha_Texture->render(flechaRect);
+
+	if (finDePartida)
+	{
+		SDL_Rect bannerRect = {215, -20, 370, 120};
+		if (ganadorId == player->pi->_id)
+			victoria_Texture->render(bannerRect);
+		else
+			derrota_Texture->render(bannerRect);
+	}
 
 	// Renderizamos fichas ---------------------------
 	SDL_Rect posIzquierdaAbajo = {160, 500, 65, 65};
@@ -302,7 +313,7 @@ void Game::run() {
 
 void clearEvents(){
 	SDL_Event e;
-	while (SDL_PollEvent(&e)){}
+	while (SDL_PollEvent(&e));
 }
 
 void Game::update() {

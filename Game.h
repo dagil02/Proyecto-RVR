@@ -29,10 +29,10 @@ private:
 	bool finDePartida = false;
 	int ganadorId = -1;
 	
+	ClientPlayer* player;
+	
 	int partida[TABLERO_NUM_COLUMNAS][TABLERO_NUM_FILAS];
 	int fichasxcolumna[TABLERO_NUM_COLUMNAS];
-
-	ClientPlayer* player;
 
 	GameObject tablero;
 
@@ -42,6 +42,8 @@ private:
 	Texture* flecha_Texture;
 	Texture* fichaRoja_Texture;
 	Texture* fichaAmarilla_Texture;
+	Texture* victoria_Texture;
+	Texture* derrota_Texture;
 
 public:
 	Game(ClientPlayer* cp);

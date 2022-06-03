@@ -37,10 +37,9 @@ class PlayerInfo : public Serializable
 
 public:
     PlayerInfo() {}
-    PlayerInfo(int id, string name, int columnaSeleccionada, bool miTurno) : Serializable()
+    PlayerInfo(int id, int columnaSeleccionada, bool miTurno) : Serializable()
     {
         _id = id;
-        _name = name;
         _columnaSeleccionada = columnaSeleccionada;
         _miTurno = miTurno;
     }
@@ -49,36 +48,52 @@ public:
     int from_bin(char *data);
 
     int _id;
-    string _name;
     int _columnaSeleccionada;
-    bool _miTurno;
+    int _miTurno;
 
-    static const size_t MESSAGE_SIZE = sizeof(uint8_t) * 2 + sizeof(char) * 8 + sizeof(bool);
+    static const size_t MESSAGE_SIZE = sizeof(int) * 3;
 };
 
 class ClientPlayer : public Player, public Client
 {
 public:
-    ClientPlayer(const char *s, const char *p, const char *n, int id) : Player(n, id), Client(s, p) {}
+    ClientPlayer(const char *s, const char *p, const char *n, int id) : Player(id), Client(s, p) {}
 
     virtual void login()
     {
         connect(socket.sd, &socket.sa, socket.sa_len);
-        pi = new PlayerInfo(_id, _name, -1, false);
-        std::cout << "NOMBRE: " << pi->_name << std::endl;
+        pi = new PlayerInfo(_id, -1, false);
         socket.send(*pi, socket);
-        piEnemy = new PlayerInfo(0, "", -1, false);
+        piEnemy = new PlayerInfo(0, -1, false);
     }
 
     void waitForMessage()
     {
         Socket *outsocket;
-        do
+
+        if (!partidaEmpezada)
         {
             socket.recv(*pi, outsocket);
-            std::cout << "MESSAGE RECIEVED playerID: " << pi->_id << std::endl;
             socket.recv(*piEnemy, outsocket);
-        } while (pi->_miTurno);
+            std::cout << "PARTIDA EMPEZADA pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
+
+            partidaEmpezada = true;
+        }
+
+        while (!pi->_miTurno)
+        {
+            std::cout << "waitForMessage" << std::endl;
+
+            socket.recv(*piEnemy, outsocket);
+            std::cout << "MESSAGE RECIEVED piEnemy: " << piEnemy->_id << " miTurno: " << piEnemy->_miTurno << std::endl;
+            socket.recv(*pi, outsocket);
+            std::cout << "MESSAGE RECIEVED pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
+        }
+    }
+
+    void waitForEndOfTurnMessage(){
+        socket.recv(*pi);
+        std::cout << "MESSAGE RECIEVED pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
     }
 
     void sendMessage(int jugada)
@@ -98,6 +113,7 @@ public:
     PlayerInfo *piEnemy;
     bool win = false;
     bool turno = false;
+    bool partidaEmpezada = false;
 };
 
 ////////////////////////////////////////////////////////////

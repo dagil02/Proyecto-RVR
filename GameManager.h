@@ -17,30 +17,20 @@ class Player
 {
 protected:
     int _id;
-    string _name;
 
 public:
     Player() {}
-    Player(string nombre, int id)
+    Player(int id)
     {
-        _name = nombre;
         _id = id;
     };
     ~Player(){};
 
     int getId() { return _id; };
-    string getName() { return _name; };
 
-    
     void setId(int newid) {
         _id = newid;
     }
-
-    void setAll(int id, string name) {
-        _id = id;
-        _name = name;
-    }
-
 };
 
 class GameManager
@@ -56,12 +46,12 @@ private:
 
     Socket* socket;
 
-    int numero = 0;
+    int turnoJugador = 0;
 
 public:
     GameManager() {
-        player1 = new Player("a", 0);
-        player2 = new Player("b", 0);
+        player1 = new Player(0);
+        player2 = new Player(1);
        
     }
     ~GameManager()
@@ -76,7 +66,7 @@ public:
    
     int run();
 
-    void joinPlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain);
+    void updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain);
     
 };
 #endif

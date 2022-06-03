@@ -217,12 +217,14 @@ bool Game::checkWin(int jugador, int x, int y){
 void Game::colocaFicha(int jugador, int columna){
 	
 	std::cout << "send" << std::endl;
-	player->sendMessage(0);
 
 	if (fichasxcolumna[columna] < TABLERO_NUM_FILAS){
 		partida [columna][fichasxcolumna[columna]] = jugador;
 		fichasxcolumna[columna]++;
 		
+		player->sendMessage(columna);
+		player->waitForEndOfTurnMessage();
+
 		//Probando que comprueba bien la victoria
 		// bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
 		// player->win = victoria; 
@@ -256,12 +258,10 @@ void Game::handleEvents() {
                 case SDLK_RIGHT: 
                     flechaIndex++;
                     break;
-                //case SDLK_RETURN: 
-				case SDLK_a: 
-					colocaFicha(1,flechaIndex);
-                    // if (player->turno){
-                    //    colocaFicha(1,flechaIndex);
-                    // }
+                case SDLK_RETURN: 
+                    if (player->pi->_miTurno){
+                        colocaFicha(player->pi->_id+1,flechaIndex);
+                    }
                     break;
                 default:
                     break; 
@@ -296,9 +296,7 @@ void Game::update() {
 	flechaIndex = flechaIndex % TABLERO_NUM_COLUMNAS;
 
 	// TODO: ver cuando hay que enviar un update
-	if(!player->update(false)) {
-		exit = true;
-	}
+	player->update(false);
 }
 
 Game::~Game() {

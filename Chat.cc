@@ -62,11 +62,41 @@ void Client::net_thread()
 
 void PlayerInfo::to_bin()
 {
+    alloc_data(MESSAGE_SIZE);
+
+    memset(_data, 0, MESSAGE_SIZE);
+    _size = MESSAGE_SIZE;
+    char *tmp = _data;
+
     
+    //Id
+    memcpy(tmp, &_id, sizeof(uint8_t));
+    tmp += sizeof(uint8_t);
+    
+    //Name
+    _name[8] = '\0';
+    memcpy(tmp, _name.c_str(), sizeof(char) * 8);
+    tmp += sizeof(char) * 8;
 }
 
 int PlayerInfo::from_bin(char *data)
 {
+     alloc_data(MESSAGE_SIZE);
+
+    memcpy(static_cast<void *>(_data), data, MESSAGE_SIZE);
+    _size = MESSAGE_SIZE;
+
+    char *tmp = _data;
+
+    
+    //Id
+    memcpy(&_id, tmp, sizeof(uint8_t));
+    tmp += sizeof(uint8_t);
+   
+    //Name
+    memcpy(&_name[0], tmp, sizeof(char) * 8);
+    tmp += sizeof(char) * 8;
+    _name[8] = '\0';
     
     return 0;
 }

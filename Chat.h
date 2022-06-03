@@ -64,9 +64,9 @@ public:
         std::cout << "2" << std::endl;
         pi = new PlayerInfo(_id, _name);
         std::cout << "3" << std::endl;
-        //socket.send(*pi, socket);
+        socket.send(*pi, socket);
         std::cout << "4" << std::endl;
-        //piEnemy = new PlayerInfo(0, "");
+        piEnemy = new PlayerInfo(0, "");
         std::cout << "5" << std::endl;
     }
 

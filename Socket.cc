@@ -69,11 +69,11 @@ int Socket::recvInit(Serializable &obj, Socket * &sock)
 int Socket::send(Serializable& obj, const Socket& sock)
 {
     int aux;
-
+    std::cout << " entra send" << std::endl;
     obj.to_bin();
-    
+    std::cout << " to bin" << std::endl;
     char *charData = obj.data();
-
+    std::cout << " data" << std::endl;
     aux = sendto(sock.sd, charData, obj.size(), 0, &sock.sa, sock.sa_len);
     std::cout << aux << " Mensaje enviado" << std::endl;
     return aux;

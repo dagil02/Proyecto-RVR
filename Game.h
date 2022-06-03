@@ -26,21 +26,11 @@ private:
 	SDL_Window* window_ = nullptr;
 	SDL_Renderer* renderer_ = nullptr;
 	bool exit = false;
-	Texture* texturas_[NUM_SPRITES];
+	bool finDePartida = false;
+	int ganadorId = -1;
 	
 	int partida[TABLERO_NUM_COLUMNAS][TABLERO_NUM_FILAS];
 	int fichasxcolumna[TABLERO_NUM_COLUMNAS];
-
-	struct TexturesAtributes {
-		string nombre;
-		int row;
-		int col;
-	};
-	
-	TexturesAtributes atributes_[NUM_SPRITES] = { 
-		"tablero.png", 1, 1, 
-		"flecha.png", 1, 1
-		};
 
 	ClientPlayer* player;
 
@@ -48,6 +38,7 @@ private:
 
 	int flechaIndex = 0;
 
+	Texture* tablero_Texture;
 	Texture* flecha_Texture;
 	Texture* fichaRoja_Texture;
 	Texture* fichaAmarilla_Texture;
@@ -60,5 +51,6 @@ public:
 	void update();
 	void handleEvents();
 	void colocaFicha(int jugador, int columna, bool fichaEnemiga, int teclaId);
-	bool checkWin(int jugador, int x, int y);
+	bool hasPlayerWon(int jugador, int x, int y);
+	void checkForEndOfGame(int columna);
 };

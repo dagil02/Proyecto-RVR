@@ -2,31 +2,20 @@
 
 Game::Game(ClientPlayer* cp) {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	window_ = SDL_CreateWindow("4 en raya", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
+	window_ = SDL_CreateWindow("Konnekta IV", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 	if (window_ == nullptr || renderer_ == nullptr) throw "Error loading the SDL window or renderer";
-		//std::cout << "antes de texturas" << std::endl;
-		for (int i = 0; i < NUM_SPRITES; i++) {
-			texturas_[i] = new Texture(renderer_, (dir + atributes_[i].nombre), atributes_[i].row, atributes_[i].col);
-	}
-	//std::cout << "despues de texturas" << std::endl;
-	tablero.setValue(139, 79, 520, 520, texturas_[0]);
 	
-	//std::cout << "antes del login" << std::endl;
+	// Assinamos el cliente del jugador
 	player = cp;
-	
-	// flecha1 = new Button(155, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha2 = new Button(225, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha3 = new Button(295, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha4 = new Button(365, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha5 = new Button(435, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha6 = new Button(505, 10, 68, 68, texturas_[1], player, NULL);
-	// flecha7 = new Button(575, 10, 68, 68, texturas_[1], player, NULL);
 
+	// Creamos las texturas
 	flecha_Texture = new Texture(renderer_, (dir + "flecha.png"), 1, 1);
-
 	fichaRoja_Texture = new Texture(renderer_, (dir + "ficha_roja.png"), 1, 1);
 	fichaAmarilla_Texture = new Texture(renderer_, (dir + "ficha_amarilla.png"), 1, 1);
+	tablero_Texture = new Texture(renderer_, (dir + "tablero.png"), 1, 1);
+	
+	tablero.setValue(139, 79, 520, 520, tablero_Texture);
 	
 	//inicialización del tablero
 	for (int i = 0; i < TABLERO_NUM_COLUMNAS; i++){
@@ -45,7 +34,9 @@ void Game::render() {
 
 	SDL_Rect flechaRect = {155, 10, 65, 65};
 	flechaRect.x += flechaIndex * 69;
-	flecha_Texture->render(flechaRect);
+
+	if (player->pi->_miTurno && !finDePartida)
+		flecha_Texture->render(flechaRect);
 
 	// Renderizamos fichas ---------------------------
 	SDL_Rect posIzquierdaAbajo = {160, 500, 65, 65};
@@ -74,7 +65,7 @@ void Game::render() {
 	SDL_RenderPresent(renderer_);
 }
 
-bool Game::checkWin(int jugador, int x, int y){
+bool Game::hasPlayerWon(int jugador, int x, int y){
 
 	int aux = 0;
 	int i = 0;
@@ -154,7 +145,6 @@ bool Game::checkWin(int jugador, int x, int y){
     }while(nuevaFila < TABLERO_NUM_COLUMNAS);
  
  
- 
     //Diagonal /
     nuevaFila = x;
     nuevaColumna = y;
@@ -206,7 +196,31 @@ bool Game::checkWin(int jugador, int x, int y){
 	return false;
 }
 
+void Game::checkForEndOfGame(int columna){
+	// Hacemos la comprobacion de victoria
+	bool victoriaYo = hasPlayerWon(player->pi->_id+1,columna,fichasxcolumna[columna]-1);
+	bool victoriaOtro = hasPlayerWon(player->piEnemy->_id+1,columna,fichasxcolumna[columna]-1);
+	
+	if (victoriaOtro)
+	{
+		std::cout << "---- Derrota ----" << std::endl;
+		finDePartida = true;
+		ganadorId = player->piEnemy->_id;
+	}
+	else if (victoriaYo)
+	{
+		std::cout << "---- Victoria ----" << std::endl;
+		finDePartida = true;
+		ganadorId = player->pi->_id;
+	}
+	
+	if (finDePartida)
+		render();
+}
+
 void Game::colocaFicha(int jugador, int columna, bool fichaEnemiga, int teclaId){
+
+	if (finDePartida) return;
 
 	if (player->pi->_id == teclaId)
 	{
@@ -222,10 +236,7 @@ void Game::colocaFicha(int jugador, int columna, bool fichaEnemiga, int teclaId)
 				render();
 			}
 			
-			//Probando que comprueba bien la victoria
-			// bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
-			// player->win = victoria;
-			// if (victoria) std::cout << "victoria" << std::endl;
+			checkForEndOfGame(columna);
 		}
 	}
 }
@@ -291,26 +302,28 @@ void Game::run() {
 
 void clearEvents(){
 	SDL_Event e;
-	while (SDL_PollEvent(&e))
-	{
-	}
+	while (SDL_PollEvent(&e)){}
 }
 
 void Game::update() {
+	if (finDePartida) return;
+
 	if (flechaIndex < 0) 
 		flechaIndex += TABLERO_NUM_COLUMNAS;
-
 	flechaIndex = flechaIndex % TABLERO_NUM_COLUMNAS;
 
 	// Comprobamos que sea nuestro turno, en caso de que no, 
 	// esperamos a recibir la respuesta con la jugada del otro jugados
 	if (player->update())
 	{
-		// Procesar jugada recibida del otro jugador
+		// Procesar la jugada recibida del otro jugador
 		colocaFicha(player->piEnemy->_id+1, player->piEnemy->_columnaSeleccionada, true, player->pi->_id);
-		std::cout << "Colocar ficha ENEMIGA idEnemy: " << player->piEnemy->_id << " column: " << player->piEnemy->_columnaSeleccionada << std::endl;
+
+		// Indicamos que le toca a este jugador
 		player->pi->_miTurno = true;
 
+		// Limpiamos el buffer de eventos de SDL por si se ha intentado poner 
+		// fichas mientras se esperaba la respuesta del otro jugador
 		clearEvents();
 	}
 }

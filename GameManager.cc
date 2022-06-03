@@ -55,4 +55,3 @@ void GameManager::updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, So
     sock2->send(*playerInfo2,*sock2);
     sock2->send(*playerInfo1,*sock2);
 }   
-

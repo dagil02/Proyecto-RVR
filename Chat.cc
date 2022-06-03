@@ -4,7 +4,7 @@ bool Server::accept_players()
 {
     listen(socket.sd, 16);
     gm = new GameManager();
-    PlayerInfo obj(0, "");
+    PlayerInfo obj(0, "",-1);
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(struct sockaddr_in);
 
@@ -13,7 +13,7 @@ bool Server::accept_players()
     Socket *sock1 = new Socket((struct sockaddr *)&client_addr, client_len);
     sock1->sd = sd_client1;
     socket.recvInit(obj, sock1);
-    PlayerInfo *newplayer1 = new PlayerInfo(0,obj._name);
+    PlayerInfo *newplayer1 = new PlayerInfo(0,obj._name,-1);
     std::cout << newplayer1->_name << " se ha conectado" << std::endl;
 
     int sd_client2 = accept(socket.sd, (struct sockaddr *)&client_addr, &client_len);
@@ -21,7 +21,7 @@ bool Server::accept_players()
     Socket *sock2 = new Socket((struct sockaddr *)&client_addr, client_len);
     sock2->sd = sd_client2;
     socket.recvInit(obj, sock2);
-    PlayerInfo *newplayer2 = new PlayerInfo(1, obj._name);
+    PlayerInfo *newplayer2 = new PlayerInfo(1, obj._name,-1);
     std::cout << newplayer2->_name << " se ha conectado" << std::endl;
 
     gm->joinPlayers(newplayer1, newplayer2, sock1, sock2, &socket);
@@ -77,6 +77,10 @@ void PlayerInfo::to_bin()
     _name[8] = '\0';
     memcpy(tmp, _name.c_str(), sizeof(char) * 8);
     tmp += sizeof(char) * 8;
+    
+    //jugada
+    memcpy(tmp, &_jugada, sizeof(uint8_t));
+    tmp += sizeof(uint8_t);
 }
 
 int PlayerInfo::from_bin(char *data)
@@ -97,6 +101,10 @@ int PlayerInfo::from_bin(char *data)
     memcpy(&_name[0], tmp, sizeof(char) * 8);
     tmp += sizeof(char) * 8;
     _name[8] = '\0';
+    
+    //jugada
+    memcpy(&_jugada, tmp, sizeof(uint8_t));
+    tmp += sizeof(uint8_t);
     
     return 0;
 }

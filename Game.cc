@@ -255,9 +255,9 @@ void Game::handleEvents() {
                 case SDLK_RETURN: 
                     colocaFicha(1,flechaIndex);
                     break;
-                case SDLK_a: 
+                /*case SDLK_a: 
                     colocaFicha(2,flechaIndex);
-                    break;
+                    break;*/
                 default:
                     break; 
             }

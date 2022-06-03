@@ -37,10 +37,11 @@ class PlayerInfo : public Serializable
 
 public:
     PlayerInfo() {}
-    PlayerInfo(int id, string name) : Serializable()
+    PlayerInfo(int id, string name, int jugada) : Serializable()
     {
         _id = id;
         _name = name;
+        _jugada = jugada;
     }
 
     void to_bin();
@@ -48,6 +49,7 @@ public:
 
     int _id;
     string _name;
+    int _jugada;
 
     static const size_t MESSAGE_SIZE = sizeof(uint8_t) * 6 + sizeof(char) * 8;
 };
@@ -59,15 +61,10 @@ public:
 
     virtual void login()
     {
-        std::cout << "1" << std::endl;
         connect(socket.sd, &socket.sa, socket.sa_len);
-        std::cout << "2" << std::endl;
-        pi = new PlayerInfo(_id, _name);
-        std::cout << "3" << std::endl;
+        pi = new PlayerInfo(_id, _name,-1);
         socket.send(*pi, socket);
-        std::cout << "4" << std::endl;
-        piEnemy = new PlayerInfo(0, "");
-        std::cout << "5" << std::endl;
+        piEnemy = new PlayerInfo(0, "",-1);
     }
 
     void waitForInput()
@@ -80,13 +77,10 @@ public:
         } while (pi->_turnoJugador == 0);*/
     }
 
-    void input(int enviar)
+    void input(int jugada)
     {
-    }
-
-    void showStats()
-    {
-        
+    	pi->_jugada = jugada;
+        socket.send(*pi, socket);
     }
 
     bool update(int enviar)

@@ -37,11 +37,12 @@ class PlayerInfo : public Serializable
 
 public:
     PlayerInfo() {}
-    PlayerInfo(int id, string name, int jugada) : Serializable()
+    PlayerInfo(int id, string name, int columnaSeleccionada, bool miTurno) : Serializable()
     {
         _id = id;
         _name = name;
-        _jugada = jugada;
+        _columnaSeleccionada = columnaSeleccionada;
+        _miTurno = miTurno;
     }
 
     void to_bin();
@@ -49,9 +50,10 @@ public:
 
     int _id;
     string _name;
-    int _jugada;
+    int _columnaSeleccionada;
+    bool _miTurno;
 
-    static const size_t MESSAGE_SIZE = sizeof(uint8_t) * 6 + sizeof(char) * 8;
+    static const size_t MESSAGE_SIZE = sizeof(uint8_t) * 2 + sizeof(char) * 8 + sizeof(bool);
 };
 
 class ClientPlayer : public Player, public Client
@@ -62,29 +64,33 @@ public:
     virtual void login()
     {
         connect(socket.sd, &socket.sa, socket.sa_len);
-        pi = new PlayerInfo(_id, _name,-1);
+        pi = new PlayerInfo(_id, _name, -1, false);
+        std::cout << "NOMBRE: " << pi->_name << std::endl;
         socket.send(*pi, socket);
-        piEnemy = new PlayerInfo(0, "",-1);
+        piEnemy = new PlayerInfo(0, "", -1, false);
     }
 
-    void waitForInput()
+    void waitForMessage()
     {
-        /*Socket *outsocket;
+        Socket *outsocket;
         do
         {
             socket.recv(*pi, outsocket);
+            std::cout << "MESSAGE RECIEVED playerID: " << pi->_id << std::endl;
             socket.recv(*piEnemy, outsocket);
-        } while (pi->_turnoJugador == 0);*/
+        } while (pi->_miTurno);
     }
 
-    void input(int jugada)
+    void sendMessage(int jugada)
     {
-    	pi->_jugada = jugada;
+    	pi->_columnaSeleccionada = jugada;
         socket.send(*pi, socket);
     }
 
     bool update(int enviar)
     {
+        waitForMessage();
+
         return false;
     }
 

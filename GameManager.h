@@ -56,6 +56,8 @@ private:
 
     Socket* socket;
 
+    int numero = 0;
+
 public:
     GameManager() {
         player1 = new Player("a", 0);
@@ -69,13 +71,10 @@ public:
         delete sock1;
         delete sock2;
         delete socket;
-      
-
-
     };
     
    
-    int mainGameLoop();
+    int run();
 
     void joinPlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain);
     

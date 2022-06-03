@@ -4,7 +4,16 @@
 using namespace std;
 
 
-int GameManager::mainGameLoop(){
+int GameManager::run(){
+
+    while(true)
+    {
+        std::cout << "Esperando..." << std::endl;
+
+        sock1->recv(*playerInfo1);
+        std::cout << "Mensaje recibido: " << playerInfo1->_columnaSeleccionada << std::endl;
+    }
+
 	return 0;
 }
 

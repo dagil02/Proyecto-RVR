@@ -70,9 +70,3 @@ public:
 	void colocaFicha(int jugador, int columna);
 	bool checkWin(int jugador, int x, int y);
 };
-	
-	
-
-
-	
-

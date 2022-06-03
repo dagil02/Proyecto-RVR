@@ -20,7 +20,6 @@ int main(int argc, char **argv)
     pthread_t id;
     std::cout << "cliente" << std::endl;
     Game* g = new Game(ec);
-    std::cout << "Game running..." << std::endl;
 	g->run();
 
     pthread_attr_init(&attr);

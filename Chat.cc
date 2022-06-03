@@ -64,7 +64,6 @@ void Client::net_thread()
 void PlayerInfo::to_bin()
 {
     alloc_data(MESSAGE_SIZE);
-
     memset(_data, 0, MESSAGE_SIZE);
     _size = MESSAGE_SIZE;
     char *tmp = _data;
@@ -78,14 +77,13 @@ void PlayerInfo::to_bin()
     tmp += sizeof(int);
 
     //Mi turno
-    memcpy(tmp, &_miTurno, sizeof(int));
-    tmp += sizeof(int);
+    memcpy(tmp, &_miTurno, sizeof(bool));
+    tmp += sizeof(bool);
 }
 
 int PlayerInfo::from_bin(char *data)
 {
     alloc_data(MESSAGE_SIZE);
-
     memcpy(static_cast<void *>(_data), data, MESSAGE_SIZE);
     _size = MESSAGE_SIZE;
 
@@ -100,8 +98,8 @@ int PlayerInfo::from_bin(char *data)
     tmp += sizeof(int);
 
     //Mi turno
-    memcpy(&_miTurno, tmp, sizeof(int));
-    tmp += sizeof(int);
+    memcpy(&_miTurno, tmp, sizeof(bool));
+    tmp += sizeof(bool);
     
     return 0;
 }

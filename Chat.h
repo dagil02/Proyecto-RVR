@@ -49,15 +49,15 @@ public:
 
     int _id;
     int _columnaSeleccionada;
-    int _miTurno;
+    bool _miTurno;
 
-    static const size_t MESSAGE_SIZE = sizeof(int) * 3;
+    static const int32_t MESSAGE_SIZE = sizeof(int) * 2 + sizeof(bool);
 };
 
 class ClientPlayer : public Player, public Client
 {
 public:
-    ClientPlayer(const char *s, const char *p, const char *n, int id) : Player(id), Client(s, p) {}
+    ClientPlayer(const char *s, const char *p, int id) : Player(id), Client(s, p) {}
 
     virtual void login()
     {
@@ -67,7 +67,7 @@ public:
         piEnemy = new PlayerInfo(0, -1, false);
     }
 
-    void waitForMessage()
+    bool waitForMessage()
     {
         Socket *outsocket;
 
@@ -78,6 +78,7 @@ public:
             std::cout << "PARTIDA EMPEZADA pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
 
             partidaEmpezada = true;
+            return false;
         }
 
         while (!pi->_miTurno)
@@ -86,14 +87,11 @@ public:
 
             socket.recv(*piEnemy, outsocket);
             std::cout << "MESSAGE RECIEVED piEnemy: " << piEnemy->_id << " miTurno: " << piEnemy->_miTurno << std::endl;
-            socket.recv(*pi, outsocket);
-            std::cout << "MESSAGE RECIEVED pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
-        }
-    }
 
-    void waitForEndOfTurnMessage(){
-        socket.recv(*pi);
-        std::cout << "MESSAGE RECIEVED pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
+            return true;
+        }
+
+        return false;
     }
 
     void sendMessage(int jugada)
@@ -104,9 +102,7 @@ public:
 
     bool update(int enviar)
     {
-        waitForMessage();
-
-        return false;
+        return waitForMessage();
     }
 
     PlayerInfo *pi;

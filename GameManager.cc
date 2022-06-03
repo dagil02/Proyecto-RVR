@@ -13,17 +13,15 @@ int GameManager::run(){
             sock1->recv(*playerInfo1);
 
             // Avisamos a este jugador, que su turno ha terminado
-            playerInfo1->_miTurno = false;
-            sock1->send(*playerInfo1,*sock1);
+            //playerInfo1->_miTurno = false;
+            //sock1->send(*playerInfo1,*sock1);
 
             // Enviamos al otro jugador la jugada realizada
             sock2->send(*playerInfo1,*sock2);
 
             // Avisamos al otro jugador que es su turno
             playerInfo2->_miTurno = true;
-            
-            std::cout << "playerInfo2: " << playerInfo2->_id << std::endl;
-            sock2->send(*playerInfo2,*sock2);
+            //sock2->send(*playerInfo2,*sock2);
 
             turnoJugador = 1;
         }
@@ -32,15 +30,15 @@ int GameManager::run(){
             sock2->recv(*playerInfo2);
 
             // Avisamos a este jugador, que su turno ha terminado
-            playerInfo2->_miTurno = false;
-            sock2->send(*playerInfo2,*sock2);
+            //playerInfo2->_miTurno = false;
+            //sock2->send(*playerInfo2,*sock2);
 
             // Enviamos al otro jugador la jugada realizada
             sock1->send(*playerInfo2,*sock1);
 
             // Avisamos al otro jugador que es su turno
             playerInfo1->_miTurno = true;
-            sock1->send(*playerInfo1,*sock1);
+            //sock1->send(*playerInfo1,*sock1);
 
             turnoJugador = 0;
         }
@@ -54,6 +52,7 @@ void GameManager::updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, So
     
     player1->setId(playerone->_id);
     player2->setId(playertwo->_id);
+
     playerInfo1 = playerone;
     playerInfo2 = playertwo;
 

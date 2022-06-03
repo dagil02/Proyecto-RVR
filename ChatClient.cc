@@ -14,7 +14,7 @@ extern "C" void * _client_thread(void *arg)
 
 int main(int argc, char **argv)
 {
-    ClientPlayer* ec = new ClientPlayer(argv[1], argv[2], argv[3], 0);
+    ClientPlayer* ec = new ClientPlayer(argv[1], argv[2], 0);
 
     pthread_attr_t attr;
     pthread_t id;

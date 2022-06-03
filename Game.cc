@@ -222,8 +222,9 @@ void Game::colocaFicha(int jugador, int columna){
 		partida [columna][fichasxcolumna[columna]] = jugador;
 		fichasxcolumna[columna]++;
 		
+		player->pi->_miTurno = false;
 		player->sendMessage(columna);
-		player->waitForEndOfTurnMessage();
+		//player->waitForEndOfTurnMessage();
 
 		//Probando que comprueba bien la victoria
 		// bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
@@ -295,8 +296,14 @@ void Game::update() {
 
 	flechaIndex = flechaIndex % TABLERO_NUM_COLUMNAS;
 
-	// TODO: ver cuando hay que enviar un update
-	player->update(false);
+	// Comprobamos que sea nuestro turno, en caso de que no, 
+	// esperamos a recibir la respuesta con la jugada del otro jugados
+	if (player->update(false))
+	{
+		// Procesar jugada recibida del otro jugador
+		colocaFicha(player->piEnemy->_id+1, player->piEnemy->_columnaSeleccionada);
+		player->pi->_miTurno = true;
+	}
 }
 
 Game::~Game() {

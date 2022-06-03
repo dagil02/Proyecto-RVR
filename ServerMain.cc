@@ -17,10 +17,8 @@ extern "C" void * _server_thread(void *arg)
     return 0;
 }
 
-
 int main(int argc, char **argv)
 {
-
     Server es(argv[1], argv[2]);
     pthread_attr_t attr;
     pthread_t id;
@@ -31,7 +29,6 @@ int main(int argc, char **argv)
     pthread_create(&id, &attr, _server_thread, static_cast<void *>(&es));
 
     es.recieve_messages();
-
 
     return 0;
 }

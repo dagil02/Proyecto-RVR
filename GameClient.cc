@@ -7,8 +7,6 @@ extern "C" void * _client_thread(void *arg)
 {
     Client * server = static_cast<Client *>(arg);
 
-    server->net_thread();
-
     return 0;
 }
 
@@ -28,9 +26,4 @@ int main(int argc, char **argv)
     pthread_create(&id, &attr, _client_thread, static_cast<void *>(&ec));
     
 	delete g;
-
 }
-
-
-
-

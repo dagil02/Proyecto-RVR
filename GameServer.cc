@@ -5,7 +5,7 @@
 
 #include "Serializable.h"
 #include "Socket.h"
-#include "Chat.h"
+#include "ClientServer.h"
 
 int main(int argc, char **argv)
 {
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 
     Server es(argv[1], argv[2]);
 
-    es.accept_players();
+    es.waitForPlayersConnection();
     sigemptyset(&waitset);
     sigaddset(&waitset, SIGQUIT);
 

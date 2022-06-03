@@ -63,9 +63,7 @@ public:
         delete socket;
     };
     
-   
     int run();
-
     void updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain);
     
 };

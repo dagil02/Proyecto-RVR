@@ -19,7 +19,7 @@ Game::Game(ClientPlayer* cp) {
 	
 	tablero.setValue(139, 79, 520, 520, tablero_Texture);
 	
-	//inicialización del tablero
+	// Inicialización del tablero
 	for (int i = 0; i < TABLERO_NUM_COLUMNAS; i++){
 		for (int j = 0; j < TABLERO_NUM_FILAS; j++){
 			partida [i][j] = 0;

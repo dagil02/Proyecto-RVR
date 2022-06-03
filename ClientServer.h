@@ -17,24 +17,9 @@
 using namespace std;
 using std::string;
 
-class Client
-{
-public:
-    Client(const char *s, const char *p) : socket(s, p){};
-    virtual ~Client(){};
-
-    void input_thread();
-
-    void net_thread();
-
-    Socket socket;
-};
-
-/////////////////////////////////////////////////////////////////////////////
 
 class PlayerInfo : public Serializable
 {
-
 public:
     PlayerInfo() {}
     PlayerInfo(int id, int columnaSeleccionada, bool miTurno) : Serializable()
@@ -53,6 +38,17 @@ public:
 
     static const int32_t MESSAGE_SIZE = sizeof(int) * 2 + sizeof(bool);
 };
+
+
+class Client
+{
+public:
+    Client(const char *s, const char *p) : socket(s, p){};
+    virtual ~Client(){};
+
+    Socket socket;
+};
+
 
 class ClientPlayer : public Player, public Client
 {
@@ -75,7 +71,7 @@ public:
         {
             socket.recv(*pi, outsocket);
             socket.recv(*piEnemy, outsocket);
-            std::cout << "PARTIDA EMPEZADA pi: " << pi->_id << " miTurno: " << pi->_miTurno << std::endl;
+            std::cout << "---- Partida Empezada ----" << std::endl;
 
             partidaEmpezada = true;
             return false;
@@ -83,11 +79,7 @@ public:
 
         while (!pi->_miTurno)
         {
-            std::cout << "waitForMessage" << std::endl;
-
             socket.recv(*piEnemy, outsocket);
-            std::cout << "MESSAGE RECIEVED piEnemy: " << piEnemy->_id << " miTurno: " << piEnemy->_miTurno << std::endl;
-
             return true;
         }
 
@@ -106,12 +98,9 @@ public:
 
     PlayerInfo *pi;
     PlayerInfo *piEnemy;
-    bool win = false;
-    bool turno = false;
     bool partidaEmpezada = false;
 };
 
-////////////////////////////////////////////////////////////
 
 class Server
 {
@@ -122,7 +111,7 @@ public:
         aux = socket.bind();
     };
 
-    bool accept_players();
+    bool waitForPlayersConnection();
 
 private:
 

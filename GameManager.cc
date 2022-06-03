@@ -1,7 +1,5 @@
 #include "GameManager.h"
-#include "Chat.h"
-
-using namespace std;
+#include "ClientServer.h"
 
 
 int GameManager::run(){
@@ -31,7 +29,6 @@ int GameManager::run(){
 	return 0;
 }
 
-
 void GameManager::updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain) {
     
     player1->setId(playerone->_id);
@@ -44,11 +41,6 @@ void GameManager::updatePlayers(PlayerInfo* playerone, PlayerInfo* playertwo, So
     sock2 = socktwo;
 
     socket = socketMain;
-
-    std::cout << "Sending player infos" << std::endl;
-
-    std::cout << "playerinfo1 " << playerInfo1->_id << std::endl; 
-    std::cout << "playerinfo2 " << playerInfo2->_id << std::endl;
     
     sock1->send(*playerInfo1,*sock1);
     sock1->send(*playerInfo2,*sock1);

@@ -1,6 +1,6 @@
-#include "Chat.h"
+#include "ClientServer.h"
 
-bool Server::accept_players()
+bool Server::waitForPlayersConnection()
 {
     listen(socket.sd, 16);
     gm = new GameManager();
@@ -25,41 +25,11 @@ bool Server::accept_players()
     std::cout << "Jugador2 se ha conectado" << std::endl;
 
     gm->updatePlayers(newplayer1, newplayer2, sock1, sock2, &socket);
-
     gm->run();
 
     return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-void Client::input_thread()
-{
-  /*  while (true)
-    {
-        std::string msg;
-        std::getline(std::cin, msg);
-
-        ChatMessage em("jose", msg);
-        em.type = ChatMessage::MESSAGE;
-
-        int cosa = socket.send(em, socket);
-    }*/
-}
-
-void Client::net_thread()
-{/*
-    while (true)
-    {
-        ChatMessage em;
-
-        socket.recv(em);
-
-        std::cout << &em.nick[0] << ": " << &em.message[0] << std::endl;
-    }*/
-}
-
-////////////////////////////////////////////////////////////////////////////
 
 void PlayerInfo::to_bin()
 {

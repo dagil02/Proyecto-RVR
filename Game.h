@@ -5,8 +5,7 @@
 #include "Texture.h"
 #include <string>
 #include <iostream>
-#include "Chat.h"
-#include "Button.h"
+#include "ClientServer.h"
 #include "GameObject.h"
 
 const int WIN_WIDTH = 800;
@@ -17,7 +16,6 @@ const uint32_t FRAME_RATE = 30;
 
 const int TABLERO_NUM_COLUMNAS = 7;
 const int TABLERO_NUM_FILAS = 6;
-
 
 
 class Game

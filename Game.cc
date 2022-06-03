@@ -42,14 +42,6 @@ Game::Game(ClientPlayer* cp) {
 void Game::render() {
 	// Limpiamos el canvas
 	SDL_RenderClear(renderer_);
-	
-	// flecha1->render();
-	// flecha2->render();
-	// flecha3->render();
-	// flecha4->render();
-	// flecha5->render();
-	// flecha6->render();
-	// flecha7->render();
 
 	SDL_Rect flechaRect = {155, 10, 65, 65};
 	flechaRect.x += flechaIndex * 69;
@@ -214,22 +206,27 @@ bool Game::checkWin(int jugador, int x, int y){
 	return false;
 }
 
-void Game::colocaFicha(int jugador, int columna){
-	
-	std::cout << "send" << std::endl;
+void Game::colocaFicha(int jugador, int columna, bool fichaEnemiga, int teclaId){
 
-	if (fichasxcolumna[columna] < TABLERO_NUM_FILAS){
-		partida [columna][fichasxcolumna[columna]] = jugador;
-		fichasxcolumna[columna]++;
-		
-		player->pi->_miTurno = false;
-		player->sendMessage(columna);
-		//player->waitForEndOfTurnMessage();
-
-		//Probando que comprueba bien la victoria
-		// bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
-		// player->win = victoria; 
-		// if (victoria) std::cout << "victoria" << std::endl;
+	if (player->pi->_id == teclaId)
+	{
+		if ((player->pi->_miTurno || fichaEnemiga) && fichasxcolumna[columna] < TABLERO_NUM_FILAS){
+			partida [columna][fichasxcolumna[columna]] = jugador;
+			fichasxcolumna[columna]++;
+			
+			if(!fichaEnemiga)
+			{
+				player->pi->_miTurno = false;
+				player->pi->_columnaSeleccionada = columna;
+				player->sendMessage();
+				render();
+			}
+			
+			//Probando que comprueba bien la victoria
+			// bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
+			// player->win = victoria;
+			// if (victoria) std::cout << "victoria" << std::endl;
+		}
 	}
 }
 
@@ -259,10 +256,11 @@ void Game::handleEvents() {
                 case SDLK_RIGHT: 
                     flechaIndex++;
                     break;
-                case SDLK_RETURN: 
-                    if (player->pi->_miTurno){
-                        colocaFicha(player->pi->_id+1,flechaIndex);
-                    }
+                case SDLK_r:
+                    colocaFicha(player->pi->_id+1,flechaIndex, false, 0);
+                    break;
+				case SDLK_a:
+                    colocaFicha(player->pi->_id+1,flechaIndex, false, 1);
                     break;
                 default:
                     break; 
@@ -279,6 +277,7 @@ void Game::run() {
 	while (!exit) {
 		frameTime = SDL_GetTicks() - startTime;
 		if (frameTime >= FRAME_RATE) {
+			render();
 			handleEvents();
 			update();
 			render();
@@ -290,6 +289,13 @@ void Game::run() {
 	SDL_Delay(5000);
 }
 
+void clearEvents(){
+	SDL_Event e;
+	while (SDL_PollEvent(&e))
+	{
+	}
+}
+
 void Game::update() {
 	if (flechaIndex < 0) 
 		flechaIndex += TABLERO_NUM_COLUMNAS;
@@ -298,11 +304,14 @@ void Game::update() {
 
 	// Comprobamos que sea nuestro turno, en caso de que no, 
 	// esperamos a recibir la respuesta con la jugada del otro jugados
-	if (player->update(false))
+	if (player->update())
 	{
 		// Procesar jugada recibida del otro jugador
-		colocaFicha(player->piEnemy->_id+1, player->piEnemy->_columnaSeleccionada);
+		colocaFicha(player->piEnemy->_id+1, player->piEnemy->_columnaSeleccionada, true, player->pi->_id);
+		std::cout << "Colocar ficha ENEMIGA idEnemy: " << player->piEnemy->_id << " column: " << player->piEnemy->_columnaSeleccionada << std::endl;
 		player->pi->_miTurno = true;
+
+		clearEvents();
 	}
 }
 

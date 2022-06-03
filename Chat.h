@@ -94,13 +94,12 @@ public:
         return false;
     }
 
-    void sendMessage(int jugada)
+    void sendMessage()
     {
-    	pi->_columnaSeleccionada = jugada;
         socket.send(*pi, socket);
     }
 
-    bool update(int enviar)
+    bool update()
     {
         return waitForMessage();
     }

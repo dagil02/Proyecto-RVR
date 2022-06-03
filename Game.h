@@ -45,14 +45,6 @@ private:
 	ClientPlayer* player;
 
 	GameObject tablero;
-	
-	Button* flecha1;
-	Button* flecha2;
-	Button* flecha3;
-	Button* flecha4;
-	Button* flecha5;
-	Button* flecha6;
-	Button* flecha7;
 
 	int flechaIndex = 0;
 
@@ -67,6 +59,6 @@ public:
 	void render();
 	void update();
 	void handleEvents();
-	void colocaFicha(int jugador, int columna);
+	void colocaFicha(int jugador, int columna, bool fichaEnemiga, int teclaId);
 	bool checkWin(int jugador, int x, int y);
 };

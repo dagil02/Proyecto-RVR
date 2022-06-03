@@ -222,6 +222,7 @@ void Game::colocaFicha(int jugador, int columna){
 		
 		//Probando que comprueba bien la victoria
 		bool victoria = checkWin(jugador,columna,fichasxcolumna[columna]-1);
+		player->win = victoria; 
 		if (victoria) std::cout << "victoria" << std::endl;
 	}
 }
@@ -253,7 +254,10 @@ void Game::handleEvents() {
                     flechaIndex++;
                     break;
                 case SDLK_RETURN: 
-                    colocaFicha(1,flechaIndex);
+                    if (player->turno){
+                       colocaFicha(1,flechaIndex);
+                       player->input(flechaIndex);
+                    }
                     break;
                 /*case SDLK_a: 
                     colocaFicha(2,flechaIndex);

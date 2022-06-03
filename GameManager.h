@@ -74,13 +74,7 @@ public:
 
     };
     
-    void sendResults();
-    //Para seleccionar la acción
-    void selectionPhase();
-
-    //Este método consiste en un switch enorme que contemplará todos los casos posibles a la hora de batirse en duelo
-    void battlePhase();
-
+   
     int mainGameLoop();
 
     void joinPlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain);

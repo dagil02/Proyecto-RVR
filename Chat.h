@@ -91,7 +91,7 @@ public:
     PlayerInfo *pi;
     PlayerInfo *piEnemy;
     bool win = false;
-    bool pulsado = false;
+    bool turno = false;
 };
 
 ////////////////////////////////////////////////////////////

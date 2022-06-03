@@ -3,21 +3,11 @@
 
 using namespace std;
 
-void GameManager::sendResults(){
-
-}
-
-void GameManager::selectionPhase()
-{
-}
 
 int GameManager::mainGameLoop(){
 	return 0;
 }
 
-void GameManager::battlePhase()
-{
-}
 
 void GameManager::joinPlayers(PlayerInfo* playerone, PlayerInfo* playertwo, Socket* sockone, Socket* socktwo, Socket* socketMain) {
     

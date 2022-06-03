@@ -44,7 +44,4 @@ class GameObject {
             h_ = h;
             texture_ = texture;
        }
-
-       
-
 };

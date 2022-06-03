@@ -279,10 +279,13 @@ void Game::handleEvents() {
                     flechaIndex++;
                     break;
                 case SDLK_r:
-                    colocaFicha(player->pi->_id+1,flechaIndex, false, 0);
+                    colocaFicha(player->pi->_id+1, flechaIndex, false, 0);
                     break;
 				case SDLK_a:
-                    colocaFicha(player->pi->_id+1,flechaIndex, false, 1);
+                    colocaFicha(player->pi->_id+1, flechaIndex, false, 1);
+					break;
+				case SDLK_SPACE:
+				colocaFicha(player->pi->_id+1, flechaIndex, false, player->pi->_id);
                     break;
                 default:
                     break; 
@@ -344,4 +347,3 @@ Game::~Game() {
 	SDL_DestroyWindow(window_);
 	SDL_Quit();
 }
-
